@@ -1,0 +1,90 @@
+#%RAML 1.0
+title: Customer Details
+version: v1
+baseUri: https://api.example.com/v1
+mediaType: application/json
+
+types:
+  CustomerInput:
+    type: object
+    properties:
+      firstName:
+        type: string
+        required: true
+        example: "Jane"
+      lastName:
+        type: string
+        required: true
+        example: "Doe"
+      email:
+        type: string
+        required: true
+        pattern: ^.+@.+\..+$
+        example: "jane.doe@example.com"
+      phone?:
+        type: string
+        example: "+1-555-0199"
+
+  Customer:
+    type: CustomerInput
+    properties:
+      customerId:
+        type: string
+        required: true
+        example: "CUST-98421"
+      createdAt:
+        type: datetime
+        required: true
+        example: 2026-03-15T12:30:00Z
+
+/customers:
+  post:
+    description: Create a new customer record.
+    body:
+      application/json:
+        type: CustomerInput
+        example:
+          firstName: "Jane"
+          lastName: "Doe"
+          email: "jane.doe@example.com"
+          phone: "+1-555-0199"
+    responses:
+      201:
+        description: Customer successfully created.
+        body:
+          application/json:
+            type: Customer
+            example:
+              customerId: "CUST-98421"
+              firstName: "Jane"
+              lastName: "Doe"
+              email: "jane.doe@example.com"
+              phone: "+1-555-0199"
+              createdAt: 2026-03-15T12:30:00Z
+      400:
+        body:
+          application/json:
+            example:
+              message: "Invalid payload or missing required fields."
+
+/customer:
+  get:
+    description: Retrieve a customer by their unique ID.
+    responses:
+      200:
+        description: Customer retrieved successfully.
+        body:
+          application/json:
+            type: Customer
+            example:
+              customerId: "CUST-98421"
+              firstName: "Jane"
+              lastName: "Doe"
+              email: "jane.doe@example.com"
+              phone: "+1-555-0199"
+              createdAt: 2026-03-15T12:30:00Z
+      404:
+        body:
+          application/json:
+            example:
+              message: "Customer not found."
