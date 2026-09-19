@@ -6,7 +6,7 @@
 
 	<groupId>22ef3a2f-f4d9-47c4-93cb-fd9eaeacfcf0</groupId>
 	<artifactId>customer-detail-api</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.2-SNAPSHOT</version>
 	<packaging>mule-application</packaging>
 
 	<name>customer-detail-api</name>
@@ -44,6 +44,7 @@
 						<vCores>0.2</vCores>
 						<deploymentTimeout>900000</deploymentTimeout>
 						<properties>
+							<anypoint.platform.gatekeeper>disabled</anypoint.platform.gatekeeper>
 							<anypoint.platform.client_id>${env.ENV_CLIENT_ID}</anypoint.platform.client_id>
 							<anypoint.platform.client_secret>${env.ENV_CLIENT_SECRET}</anypoint.platform.client_secret>
 						</properties>
