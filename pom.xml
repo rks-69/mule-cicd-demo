@@ -6,7 +6,7 @@
 
 	<groupId>22ef3a2f-f4d9-47c4-93cb-fd9eaeacfcf0</groupId>
 	<artifactId>customer-detail-api</artifactId>
-	<version>1.0.2-SNAPSHOT</version>
+	<version>1.0.3-SNAPSHOT</version>
 	<packaging>mule-application</packaging>
 
 	<name>customer-detail-api</name>
