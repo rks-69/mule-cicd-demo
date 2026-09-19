@@ -41,7 +41,8 @@
 						<server>anypoint-connected-app</server>
 						<applicationName>customer-detail-api</applicationName>
 						<replicas>1</replicas>
-						<vCores>0.5</vCores>
+						<vCores>0.2</vCores>
+						<deploymentTimeout>900000</deploymentTimeout>
 						<properties>
 							<anypoint.platform.client_id>${env.ENV_CLIENT_ID}</anypoint.platform.client_id>
 							<anypoint.platform.client_secret>${env.ENV_CLIENT_SECRET}</anypoint.platform.client_secret>
