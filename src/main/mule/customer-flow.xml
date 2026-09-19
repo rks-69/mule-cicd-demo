@@ -1,5 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd"></mule>
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<flow name="get:\customer:customer-details-config">
+		<ee:transform doc:name="Transform Message">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  customerId: "CUST-98421",
+  firstName: "Jane",
+  lastName: "Doe",
+  email: "jane.doe@example.com",
+  phone: "+1-555-0199",
+  createdAt: "2026-03-15T12:30:00Z"
+} as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger"
+			doc:id="36544bef-9e33-4b36-bfa1-7ff1b485b60c" message="#[payload]" />
+	</flow>
+	<flow
+		name="post:\customers:application\json:customer-details-config">
+		<ee:transform doc:name="Transform Message">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  customerId: "CUST-98421",
+  firstName: "Jane",
+  lastName: "Doe",
+  email: "jane.doe@example.com",
+  phone: "+1-555-0199",
+  createdAt: "2026-03-15T12:30:00Z"
+} as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger"
+			doc:id="8588954b-adb2-46c8-943b-612fb61e38d9" message="#[payload]" />
+	</flow>
+
+</mule>
