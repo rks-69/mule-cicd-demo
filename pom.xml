@@ -14,8 +14,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-		<app.runtime>4.12.2</app.runtime>
+		<app.runtime>4.12.3</app.runtime>
 		<mule.maven.plugin.version>4.10.1</mule.maven.plugin.version>
 	</properties>
 
@@ -31,23 +30,22 @@
 				<artifactId>mule-maven-plugin</artifactId>
 				<version>${mule.maven.plugin.version}</version>
 				<extensions>true</extensions>
-			</plugin>
-			<plugin>
-				<groupId>org.mule.tools.maven</groupId>
-				<artifactId>mule-maven-plugin</artifactId>
-				<version>${mule.maven.plugin.version}</version>
-				<extensions>true</extensions>
 				<configuration>
 					<cloudhub2Deployment>
 						<uri>https://anypoint.mulesoft.com</uri>
 						<provider>MC</provider>
 						<environment>Sandbox</environment>
 						<target>Cloudhub-US-East-2</target>
-						<muleVersion>4.12</muleVersion>
+						<muleVersion>4.12.3</muleVersion>
+						<releaseChannel>Edge</releaseChannel>
 						<server>anypoint-connected-app</server>
 						<applicationName>customer-detail-api</applicationName>
 						<replicas>1</replicas>
-						<vCores>0.1</vCores>
+						<vCores>0.5</vCores>
+						<properties>
+							<anypoint.platform.client_id>${env.ENV_CLIENT_ID}</anypoint.platform.client_id>
+							<anypoint.platform.client_secret>${env.ENV_CLIENT_SECRET}</anypoint.platform.client_secret>
+						</properties>
 					</cloudhub2Deployment>
 				</configuration>
 			</plugin>
@@ -93,10 +91,16 @@
 	<distributionManagement>
 		<repository>
 			<id>anypoint-connected-app</id>
-			<name>Corporate Repository</name>
+			<name>Exchange Repository</name>
 			<url>https://maven.anypoint.mulesoft.com/api/v3/organizations/${project.groupId}/maven</url>
 			<layout>default</layout>
 		</repository>
+		<snapshotRepository>
+			<id>anypoint-connected-app</id>
+			<name>Exchange Repository Snapshots</name>
+			<url>https://maven.anypoint.mulesoft.com/api/v3/organizations/${project.groupId}/maven</url>
+			<layout>default</layout>
+		</snapshotRepository>
 	</distributionManagement>
 
 	<pluginRepositories>
