@@ -17,7 +17,7 @@ permissions:
 
 jobs:
   # -------------------------------------------------------------
-  # Deploy PR Builds OR Manual Workflow Runs
+  # Deploy PR Builds OR Manual Runs
   # -------------------------------------------------------------
   deploy-pr-or-manual:
     name: Build & Deploy (PR / Manual)
@@ -35,17 +35,24 @@ jobs:
           java-version: '17'
           cache: 'maven'
 
-      - name: Build and Deploy
+      - name: Publish to Exchange and Deploy to CloudHub 2.0
         env:
           CONNECTED_APP_CLIENT_ID: ${{ secrets.ANYPOINT_CLIENT_ID }}
           CONNECTED_APP_CLIENT_SECRET: ${{ secrets.ANYPOINT_CLIENT_SECRET }}
         run: |
-          mvn clean deploy -DmuleDeploy \
+          # 1. Publish artifact to Anypoint Exchange
+          mvn clean deploy \
+            -s .maven/settings.xml \
+            -DskipMuleDeploy \
+            -DskipTests
+
+          # 2. Deploy published asset from Exchange to CloudHub 2.0
+          mvn mule:deploy \
             -s .maven/settings.xml \
             -DskipTests
 
   # -------------------------------------------------------------
-  # Merge to Main (Release, Tag, Deploy & Increment POM)
+  # Merged to Main (Release, Tag, Deploy & Increment POM)
   # -------------------------------------------------------------
   release-and-bump-main:
     name: Release, Deploy & Increment Version (Merged to Main)
@@ -73,21 +80,28 @@ jobs:
 
       - name: Set Release Version (Strip -SNAPSHOT)
         run: |
-          # Read current POM version (e.g., 1.0.0-SNAPSHOT)
+          # Read current version from pom.xml
           CURRENT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          # Convert to release version (e.g., 1.0.0)
+          # Remove -SNAPSHOT suffix (e.g., 1.0.0-SNAPSHOT -> 1.0.0)
           RELEASE_VERSION=${CURRENT_VERSION%-SNAPSHOT}
           echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
           
           # Update pom.xml to release version
           mvn versions:set -DnewVersion=$RELEASE_VERSION -DgenerateBackupPoms=false
 
-      - name: Deploy Release to CloudHub 2.0
+      - name: Publish Release to Exchange and Deploy to CloudHub 2.0
         env:
           CONNECTED_APP_CLIENT_ID: ${{ secrets.ANYPOINT_CLIENT_ID }}
           CONNECTED_APP_CLIENT_SECRET: ${{ secrets.ANYPOINT_CLIENT_SECRET }}
         run: |
-          mvn clean deploy -DmuleDeploy \
+          # 1. Publish Release asset to Anypoint Exchange
+          mvn clean deploy \
+            -s .maven/settings.xml \
+            -DskipMuleDeploy \
+            -DskipTests
+
+          # 2. Deploy the Release asset to CloudHub 2.0
+          mvn mule:deploy \
             -s .maven/settings.xml \
             -DskipTests
 
@@ -98,7 +112,7 @@ jobs:
 
       - name: Increment POM to Next Snapshot Version
         run: |
-          # Increment minor/patch version and append -SNAPSHOT (e.g., 1.0.0 -> 1.0.1-SNAPSHOT)
+          # Increment version and re-attach -SNAPSHOT (e.g., 1.0.0 -> 1.0.1-SNAPSHOT)
           mvn versions:set -DnextSnapshot=true -DgenerateBackupPoms=false
           NEXT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           
