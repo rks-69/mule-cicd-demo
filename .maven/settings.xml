@@ -3,8 +3,16 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
     <servers>
+        <!-- Used for CloudHub 2.0 deployment and distributionManagement -->
         <server>
             <id>anypoint-connected-app</id>
+            <username>~~~Client~~~</username>
+            <password>${env.CONNECTED_APP_CLIENT_ID}~?~${env.CONNECTED_APP_CLIENT_SECRET}</password>
+        </server>
+
+        <!-- Used by exchange-mule-maven-plugin to query Exchange -->
+        <server>
+            <id>anypoint-exchange-v3</id>
             <username>~~~Client~~~</username>
             <password>${env.CONNECTED_APP_CLIENT_ID}~?~${env.CONNECTED_APP_CLIENT_SECRET}</password>
         </server>

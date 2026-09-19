@@ -1,1 +1,1 @@
-This is Mule App CI/CD Demo to CloudHub 2.0
+This is Mule App CI/CD Demo to Anypoint Platform - CloudHub 2.0
